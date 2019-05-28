@@ -1,0 +1,30 @@
+----
+
+原文链接：https://pytorch.org/tutorials/beginner/deep_learning_60min_blitz.html
+
+译者：BING
+
+时间：20190528
+
+**原作者**: [Soumith Chintala](http://soumith.ch/)
+
+----
+
+本教程目标：
+
+- 从高层次理解Pytorch张量库和神经网络
+- 训练一个小型的神经网络用于分类图片
+
+本教程假定你对Numpy有基础的掌握。
+
+> 确保你已经安装了torch和torchvision包。
+
+### 内容大纲
+
+- [什么是Pytorch](https://pytorch.org/tutorials/beginner/blitz/tensor_tutorial.html#sphx-glr-beginner-blitz-tensor-tutorial-py)
+- [自动求梯度：自动微分](https://pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html#sphx-glr-beginner-blitz-autograd-tutorial-py)
+- [神经网络](https://pytorch.org/tutorials/beginner/blitz/neural_networks_tutorial.html#sphx-glr-beginner-blitz-neural-networks-tutorial-py)
+- [训练一个分类器](https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html#sphx-glr-beginner-blitz-cifar10-tutorial-py)
+- [可选：数据并行](https://pytorch.org/tutorials/beginner/blitz/data_parallel_tutorial.html#sphx-glr-beginner-blitz-data-parallel-tutorial-py)
+
+END.
