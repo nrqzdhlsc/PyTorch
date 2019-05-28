@@ -1,0 +1,346 @@
+----
+
+原文链接：https://pytorch.org/tutorials/beginner/blitz/tensor_tutorial.html#sphx-glr-beginner-blitz-tensor-tutorial-py
+
+译者：BING
+
+时间：20190528
+
+----
+
+## 什么是Pytorch？
+
+它是一个基于Python的科学计算库，针对两类使用人群：
+
+- 可替代Numpy且使用GPU能力
+- 深度学习研究平台，它能提供最大的灵活性和速度
+
+## 开始
+
+### 张量
+
+张量与`Numpy`的`ndarray`很像，但添加的额外的特性是能在GPU上进行加速运算。
+
+```python
+from __future__ import print_function
+import torch
+```
+
+构建一个5x3的矩阵，未初始化：
+
+```python
+x = torch.empty(5, 3)
+print(x)
+```
+
+**输出：**
+
+```bash
+tensor([[0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.],
+        [0., 0., 0.]])
+```
+
+构建一个随机初始化的矩阵：
+
+```python
+x = torch.rand(5, 3)
+print(x)
+```
+
+**输出**：
+
+```bash
+tensor([[0.5206, 0.9457, 0.6326],
+        [0.6364, 0.6999, 0.4455],
+        [0.7720, 0.6709, 0.6279],
+        [0.7358, 0.2711, 0.5220],
+        [0.4246, 0.7716, 0.7285]])
+```
+
+构建一个全零并指定类型为`long`的矩阵：
+
+```python
+x = torch.zeros(5, 3, dtype=torch.long)
+print(x)
+```
+
+**输出**：
+
+```bash
+tensor([[0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0],
+        [0, 0, 0]])
+```
+
+直接从数据中构建张量：
+
+```python
+x = torch.tensor([5.5, 3])
+print(x)
+```
+
+**输出**：
+
+```bash
+tensor([5.5000, 3.0000])
+```
+
+或者从已经存在的张量中创建张量。这些方法会重用输入张量的属性，如，数据类型，除非新的属性值被用户指定。
+
+```python
+x = x.new_ones(5, 3, dtype=torch.double)      # new_* methods take in sizes
+print(x)
+
+x = torch.randn_like(x, dtype=torch.float)    # override dtype!
+print(x)                                      # result has the same size
+```
+
+**输出**：
+
+```bash
+tensor([[1., 1., 1.],
+        [1., 1., 1.],
+        [1., 1., 1.],
+        [1., 1., 1.],
+        [1., 1., 1.]], dtype=torch.float64)
+tensor([[ 0.0373, -0.9323,  0.0774],
+        [-0.8277,  1.2224, -0.6438],
+        [-0.6514,  0.7811,  1.8536],
+        [-1.1052, -0.4802,  0.1566],
+        [-0.2879, -0.8193,  2.0767]])
+```
+
+获得形状大小：
+
+```python
+print(x.size())
+```
+
+输出：
+
+```bash
+torch.Size([5, 3])
+```
+
+注意：`torch.Size` 实际上是个元组，因此它支持元组的所有操作。
+
+### Operations 操作
+
+有很多操作语法，下面的案例中我们先看加法操作。
+
+加法: 语法1
+
+```python
+y = torch.rand(5, 3)
+print(x + y)
+```
+
+输出:
+
+```python
+tensor([[ 0.6946, -0.5303,  0.9419],
+        [-0.6083,  2.1124,  0.3408],
+        [ 0.3009,  0.9659,  2.3433],
+        [-0.3658, -0.3978,  0.4946],
+        [ 0.0175, -0.3072,  2.4410]])
+```
+
+加法: 语法2
+
+```python
+print(torch.add(x, y))
+```
+
+输出:
+
+```bash
+tensor([[ 0.6946, -0.5303,  0.9419],
+        [-0.6083,  2.1124,  0.3408],
+        [ 0.3009,  0.9659,  2.3433],
+        [-0.3658, -0.3978,  0.4946],
+        [ 0.0175, -0.3072,  2.4410]])
+```
+
+加法:  提供输出张量作为参数
+
+```python
+result = torch.empty(5, 3)
+torch.add(x, y, out=result)
+print(result)
+```
+
+输出:
+
+```bash
+tensor([[ 0.6946, -0.5303,  0.9419],
+        [-0.6083,  2.1124,  0.3408],
+        [ 0.3009,  0.9659,  2.3433],
+        [-0.3658, -0.3978,  0.4946],
+        [ 0.0175, -0.3072,  2.4410]])
+```
+
+加法:原地替换(操作后面加短下划线表示原地操作)
+
+```python
+# adds x to y
+y.add_(x)
+print(y)
+```
+
+输出:
+
+```bash
+tensor([[ 0.6946, -0.5303,  0.9419],
+        [-0.6083,  2.1124,  0.3408],
+        [ 0.3009,  0.9659,  2.3433],
+        [-0.3658, -0.3978,  0.4946],
+        [ 0.0175, -0.3072,  2.4410]])
+```
+
+**注意**：任何在张量上的原地操作都以`_`结尾。比如`x.copy_(y)`，`x.t_()`都会改变`x`。
+
+你可以用标准的Numpy一样的花里胡哨的索引：
+
+```
+print(x[:, 1])
+```
+
+输出：
+
+```bash
+tensor([-0.9323,  1.2224,  0.7811, -0.4802, -0.8193])
+```
+
+重设定尺寸：如果你想改变张量的形状/尺寸，你可以用`torch.view`:
+
+```python
+x = torch.randn(4, 4)
+y = x.view(16)
+z = x.view(-1, 8)  # the size -1 is inferred from other dimensions
+print(x.size(), y.size(), z.size())
+```
+
+输出:
+
+```bash
+torch.Size([4, 4]) torch.Size([16]) torch.Size([2, 8])
+```
+
+如果你有一个**只有一个元素的张量**，使用`.iter()`获取Python数字类型的值：
+
+```python
+x = torch.randn(1)
+print(x)
+print(x.item())
+```
+
+输出:
+
+```bash
+tensor([-0.7337])
+-0.7337026000022888
+```
+
+**阅读更多:**
+
+> 100+张量操作，包含转置，索引，切片以及数学操作。线性代数，随机数等，[文档地址](https://pytorch.org/docs/torch)。
+
+## Numpy桥
+
+Torch张量和Numpy数组可以相互转换。
+
+Torch张量和Numpy数组共享底层存储（如果是Torch张量是在CPU上），改变一个也会改变另一个。
+
+### 将Torch张量转换为Numpy数组
+
+```python
+a = torch.ones(5)
+print(a)
+```
+
+输出:
+
+```bash
+tensor([1., 1., 1., 1., 1.])
+```
+
+```python
+b = a.numpy() # 转换为Numpy数组，不是to_numpy,而是直接.numpy
+print(b)
+```
+
+输出:
+
+```bash
+[1. 1. 1. 1. 1.]
+```
+
+See how the numpy array changed in value.
+
+看Numpy数组是值如何响应变化。
+
+```python
+a.add_(1) # 对torch张量进行变化
+print(a)
+print(b) # b是numpy数组会跟随变化
+```
+
+输出:
+
+```bash
+tensor([2., 2., 2., 2., 2.])
+[2. 2. 2. 2. 2.]
+```
+
+### 将Numpy数组转换为Torch张量
+
+看改变Numpy数组是Torch张量是如何自动变化的：
+
+```python
+import numpy as np
+a = np.ones(5)
+b = torch.from_numpy(a) # 从numpy数组中生成torch张量
+np.add(a, 1, out=a) # a保存计算结果
+print(a)
+print(b)
+```
+
+输出:
+
+```bash
+[2. 2. 2. 2. 2.]
+tensor([2., 2., 2., 2., 2.], dtype=torch.float64)
+```
+
+CPU上的所有张量除了`CharTensor`外，都支持Numpy与Torch之间的互转。
+
+## CUDA张量
+
+张量可以移动到任何设备上，使用`.to`方法就可以做到。
+
+```python
+# 先判断CUDA是否可用
+# 用 ``torch.device`` 对象将张量移到/移出GPU
+if torch.cuda.is_available():
+    device = torch.device("cuda")          # 定义一个CUDA设备对象
+    y = torch.ones_like(x, device=device)  # 直接在GPU上创建张量，这里指定的
+    x = x.to(device)                       # 或者用`to`移动到GPU设备 
+    z = x + y
+    print(z)
+    print(z.to("cpu", torch.double))       #  ``.to`` 也能改变数据类型
+```
+
+输出:
+
+```bash
+tensor([0.2663], device='cuda:0')
+tensor([0.2663], dtype=torch.float64)
+```
+
+END.
+
