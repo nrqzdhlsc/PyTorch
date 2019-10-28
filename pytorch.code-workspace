@@ -2,6 +2,12 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "pytorch-master"
+		},
+		{
+			"path": "vision-master"
 		}
 	],
 	"settings": {}
