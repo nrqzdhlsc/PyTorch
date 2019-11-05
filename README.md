@@ -1,3 +1,7 @@
-# Pytorch Cheat Sheet
+### Time: 20191105
 
-关于PyTorch的Cheat Sheet.
+PyTorch和Python知识库的整理，希望达成的目标是能够通过复习本库，能迅速GET，重温PyTorch的手感。
+
+代码片段要经过不断优化，拿来即用。
+
+
